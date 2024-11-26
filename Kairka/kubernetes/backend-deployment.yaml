@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: backend-deployment
+spec: 
+  replicas: 2 
+  selector: 
+    matchLabels: 
+      app: backend
+  template: 
+    metadata: 
+      labels: 
+        app: backend
+    spec:
+      containers: 
+      - name: backend
+        image: europe-west1-docker.pkg.dev/focal-freedom-442609-f7/backend/backend:latest
+        ports: 
+        - containerPort: 3000
+        env:
+        - name: PGDATABASE
+          valueFrom:
+            secretKeyRef:
+              name: database-secret
+              key: database
+        - name: PGUSER
+          valueFrom:
+            secretKeyRef:
+              name: database-secret
+              key: user
+        - name: PGPASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: database-secret
+              key: password
+        - name: PGHOST
+          valueFrom:
+            secretKeyRef:
+              name: database-secret
+              key: host
